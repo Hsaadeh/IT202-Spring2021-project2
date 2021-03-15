@@ -7,6 +7,19 @@
     <title>Document</title>
 
     <style>
+        #canvas1 {
+            background: black;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+            border: 5px solid white;        
+        }
+
+        body {
+            background: black;
+        }
 
     </style>
 
@@ -16,6 +29,8 @@
     <canvas id="canvas1" width="500" height="500"></canvas>
 
     <script>
+        let canvas = document.querySelector("#canvas1");
+        let ctx = canvas.getContext("2d");
 
     </script>
 
