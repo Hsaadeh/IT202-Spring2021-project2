@@ -1,0 +1,38 @@
+body {
+    background-image: url("menu_8_bit.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#canvas{
+    visibility: hidden;
+}
+
+#title {
+    margin-top: 10%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.button{
+    background-color:darkgray;
+    color:white;
+    font-weight: bold;
+    border-color:white;
+    border-width: 5px;
+    padding: 5px 25px;
+    margin-left: 45%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    display: block;
+}
+
+.button:hover {
+    background-color: white;
+    color: darkgray;
+}
+
+#startGame{
+    margin-left: 46.5%;
+}
