@@ -1,7 +1,7 @@
 body {
-    background-image: url("menu_8_bit.jpg");
+    background-image: url("pixelated_background3.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 #canvas{
@@ -13,16 +13,29 @@ body {
     text-align: center;
     color: white;
     font-weight: bold;
+    font-size: 50px;
+}
+
+#instructionsPage{
+    text-align: center;
+    margin-left: 40%;
+    color:white;
+    font-size: 15px;
+    background-color: gray;
+    width: 300px;
+    border-color: white;
+    border-width: 10px;
 }
 
 .button{
-    background-color:darkgray;
+    background-color:gray;
     color:white;
     font-weight: bold;
+    font-size: 25px;
     border-color:white;
     border-width: 5px;
     padding: 5px 25px;
-    margin-left: 45%;
+    margin-left: 46%;
     margin-bottom: 20px;
     margin-top: 20px;
     display: block;
@@ -30,9 +43,5 @@ body {
 
 .button:hover {
     background-color: white;
-    color: darkgray;
-}
-
-#startGame{
-    margin-left: 46.5%;
+    color: gray;
 }
