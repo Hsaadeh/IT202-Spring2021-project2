@@ -2,10 +2,12 @@ body {
     background-image: url("pixelated_background3.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    height: 100vh;
+    width: 100vw;
 }
 
-#canvas{
-    visibility: hidden;
+#menu {
+    display: block;
 }
 
 #title {
@@ -23,8 +25,8 @@ body {
     font-size: 15px;
     background-color: gray;
     width: 300px;
-    border-color: white;
-    border-width: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .button{
@@ -44,4 +46,11 @@ body {
 .button:hover {
     background-color: white;
     color: gray;
+}
+
+#gameCanvas {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
 }
