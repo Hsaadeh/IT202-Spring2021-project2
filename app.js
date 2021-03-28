@@ -19,7 +19,7 @@ startButton.addEventListener("click", (event) => {
 
 // Animation class
 class Animation {
-    constructor(spriteSheet, context, spriteWidth, spriteHeight, xStartIndex, xEndIndex, yIndexOffset, animationSpeed, scale=1) {
+    constructor(spriteSheet, context, spriteWidth, spriteHeight, xStartIndex, xEndIndex, yIndexOffset, animationSpeed, scale = 1) {
         this.xPostion = 0;
         this.yPosition = 0;
         this.spriteSheet = spriteSheet;
@@ -35,8 +35,8 @@ class Animation {
         this.scale = scale;
     }
     play() {
-        this.context.drawImage(this.spriteSheet, 
-            this.xframeIndex * this.width, 
+        this.context.drawImage(this.spriteSheet,
+            this.xframeIndex * this.width,
             this.yIndexOffset * this.height,
             this.width,
             this.height,
@@ -58,36 +58,97 @@ class Animation {
 
 }
 
-// Player Class
-class Player {
+class Entity {
     constructor() {
-        // starting position
+        this.context;
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+        this.speed = 1;
+        this.velocity = [0, 0];
+        this.image = null;
+        this.currentAnimation = null;
+    }
 
+    update() {
+        this.x += this.velocity[0];
+        this.y += this.velocity[1];
+
+        if (this.image == null) {
+            this.currentAnimation.xPostion = this.x;
+            this.currentAnimation.yPosition = this.y;
+            this.currentAnimation.update();
+        }
+    }
+
+    draw() {
+        // draw image
+        if (this.image != null) {
+
+            this.context.drawImage(this.image,
+                0,
+                0,
+                this.width,
+                this.height,
+                this.x,
+                this.y,
+                this.width * this.scale,
+                this.height * this.scale);
+        }
+        else {
+            this.currentAnimation.play();
+        }
+    }
+}
+
+let areColliding = (entityA, entityB) => {
+    let delta_x = entityB.x - entityA.x;
+    let delta_y = entityB.y - entityA.y;
+
+    let distance = Math.sqrt((delta_x * delta_x) + (delta_y * delta_y));
+
+    if (distance < (entityA.width/2 + entityB.width/2)) {
+        return true;
+    }
+    return false;
+}
+
+// Player Class
+class Player extends Entity{
+    constructor() {
+        super();
+
+        //starting position
+        this.lives = 3;
+        this.dead = false;
         this.x = 0; // player's x coordinate position
         this.y = 80; // player's y coordinate position
+        this.width = 64;
+        this.height = 64;
 
         // movement
         this.movingLeft = false;
         this.movingRight = false;
         this.attacking = false;
         // this.jumping = false;
-        this.speed = 1;
-        this.velocity = [0,0];
+        // this.speed = 1;
+        // this.velocity = [0, 0];
 
-        // for the spritesheet position
-        this.xFrame = 0;
-        this.yFrame = 0;
-        this.frame = 0;
+        // // for the spritesheet position
+        // this.xFrame = 0;
+        // this.yFrame = 0;
+        // this.frame = 0;
 
         // sprite dimensions
-        this.spriteWidth = 64;
-        this.spriteHeight = 64;
+        // this.spriteWidth = 64;
+        // this.spriteHeight = 64;
 
         // keeps track of player state
         // this.state = this.states['idle'];
 
         // add 3 animation objects from animation class
-        
+
         // idle
         let idleRunSpriteSheet = new Image();
         idleRunSpriteSheet.src = "SpriteSheets/Idle_and_running.png";
@@ -97,7 +158,7 @@ class Player {
         runningLeftSpriteSheet.src = "SpriteSheets/runningLeft.png"
         this.runRightAnimation = new Animation(idleRunSpriteSheet, context, 64, 64, 0, 7, 1, 20);
         this.runLeftAnimation = new Animation(runningLeftSpriteSheet, context, 64, 64, 0, 7, 1, 20);
-        
+
         // jump
         let jumpSpriteSheet = new Image();
         jumpSpriteSheet.src = "SpriteSheets/Jumping.png";
@@ -107,10 +168,10 @@ class Player {
         let attackSpriteSheet = new Image();
         attackSpriteSheet.src = "SpriteSheets/Normal Attack.png";
         this.attackAnimation = new Animation(attackSpriteSheet, context, 64, 64, 0, 5, 3, 20);
-        
+
         // current Animation
         this.currentAnimation = this.idleAnimation;
-        
+
     }
     update() {
         if (this.movingLeft) {
@@ -123,8 +184,8 @@ class Player {
             this.velocity[1] = this.speed;
         }
 
-        this.x += this.velocity[0];
-        this.y += this.velocity[1];
+        // this.x += this.velocity[0];
+        // this.y += this.velocity[1];
 
         // running to the right
         if (this.velocity[0] > 0) {
@@ -140,18 +201,19 @@ class Player {
         else {
             this.currentAnimation = this.idleAnimation;
         }
-        
+
         // this.runAnimation.isFlipped = false;
+        
+        // this.currentAnimation.xPostion = this.x;
+        // this.currentAnimation.yPosition = this.y;
+        // this.currentAnimation.update();
+        super.update();
         this.velocity = [0, 0];
-
-        this.currentAnimation.xPostion = this.x;
-        this.currentAnimation.yPosition = this.y;
-        this.currentAnimation.update();
-
     }
     draw() {
         //
-        this.currentAnimation.play();
+        //this.currentAnimation.play();
+        super.draw();
     }
     idle() {
         //
@@ -167,7 +229,53 @@ class Player {
     }
 }
 
+class Bat extends Entity {
+    constructor() {
+        super();
+        this.x = gameCanvas.width;
+        this.y = 97;
+        this.width = 16;
+        this.height = 24;
+        this.velocity = [-this.speed, 0];
 
+        let batSpriteSheet = new Image();
+        batSpriteSheet.src = "SpriteSheets/Bat_Sprite_Sheet.png";
+        this.currentAnimation = new Animation(batSpriteSheet, context, this.width, this.height, 0, 4, 0, 30);
+    }
+    update() {
+        super.update();
+        if (this.x < 0) {
+            this.x = gameCanvas.width;
+        }
+    }
+    draw() {
+        super.draw();
+    }
+}
+
+class Coin extends Entity {
+    constructor() {
+        super();
+        this.x = gameCanvas.width + 150;
+        this.y = 110;
+        this.width = 24;
+        this.height = 24;
+        this.velocity = [-this.speed, 0];
+
+        let coinSpriteSheet = new Image();
+        coinSpriteSheet.src = "SpriteSheets/coin.png";
+        this.currentAnimation = new Animation(coinSpriteSheet, context, this.width, this.height, 0, 0, 0, 300, 0.5);
+    }
+    update() {
+        super.update();
+        if (this.x < 0) {
+            this.x = gameCanvas.width;
+        }
+    }
+    draw() {
+        super.draw();
+    }
+}
 
 let player = new Player();
 
@@ -215,37 +323,44 @@ window.addEventListener("keyup", (keyreleased) => {
     }
 });
 
-// draw the character
-// let spriteSheet = new Image();
-// spriteSheet.src = "SpriteSheets/Idle_and_running.png";
-// let count = 0;
-// let frameIndex = 0;
-
-
-
-
-// let animate = () => {
-
-//     // play()
-//     context.drawImage(spriteSheet, frameIndex * 64, 1* 64, 64, 64, 20, 20, 64, 64);
-
-//     // put in an update function
-//     count++;
-//     if (count > 10) {
-//         frameIndex++;
-//         count = 0;
-//     };
-    
-//     if (frameIndex > 7) {
-//         frameIndex = 0;
-//     };
-// }
-
+let bat1 = new Bat();
+let bats = [bat1];
+let coin = new Coin();
+let coins = [coin];
 
 let runGame = () => {
     context.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    player.update();
-    player.draw();
+
+    if (!player.dead) {
+        player.update();
+        player.draw();
+    }
+    bats.forEach((bat) => {
+        bat.update();
+        bat.draw();
+    });
+    coins.forEach((coin) => {
+        coin.update();
+        coin.draw();
+    });
+
+    // collision
+    if (bats.length > 0) {
+        if (areColliding(player, bats[0])) {
+            bats.pop();
+            player.lives--;
+            if (player.lives == 0) {
+                player.dead = true;
+            }
+            console.log(player.lives);
+        }
+    }
+    if (coins.length > 0) {
+        if (areColliding(player, coins[0])) {
+            coins.pop();
+        }
+    }
+
     window.requestAnimationFrame(runGame);
 }
 
