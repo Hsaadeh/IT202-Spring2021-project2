@@ -15,12 +15,13 @@ body {
 
 #title {
     margin-top: 10%;
+    margin-left: 40%;
     text-align: center;
     color: white;
     font-weight: bold;
     font-size: 50px;
-    background-color: black;
-    background-repeat: no-repeat;
+    background-color: darkslategray;
+    width: 300px;
 }
 
 #instructionsPage{
@@ -28,14 +29,14 @@ body {
     margin-left: 40%;
     color:white;
     font-size: 15px;
-    background-color: gray;
+    background-color: darkslategray;
     width: 300px;
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
 .button{
-    background-color:gray;
+    background-color:darkslategray;
     color:white;
     font-weight: bold;
     font-size: 25px;

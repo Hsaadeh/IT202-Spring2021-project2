@@ -126,12 +126,13 @@ class Player extends Entity{
         this.y = 80; // player's y coordinate position
         this.width = 64;
         this.height = 64;
+        this.facingRight = true;
 
         // movement
         this.movingLeft = false;
         this.movingRight = false;
         this.attacking = false;
-        // this.jumping = false;
+        this.jumping = false;
         // this.speed = 1;
         // this.velocity = [0, 0];
 
@@ -164,10 +165,15 @@ class Player extends Entity{
         jumpSpriteSheet.src = "SpriteSheets/Jumping.png";
         this.jumpAnimation = new Animation(jumpSpriteSheet, context, 64, 64, 0, 7, 0, 20);
 
-        // attack
-        let attackSpriteSheet = new Image();
-        attackSpriteSheet.src = "SpriteSheets/Normal Attack.png";
-        this.attackAnimation = new Animation(attackSpriteSheet, context, 64, 64, 0, 5, 3, 20);
+        // attack animations
+        // right attack
+        let attackRightSpriteSheet = new Image();
+        attackRightSpriteSheet.src = "SpriteSheets/Normal Attack.png";
+        this.attackRightAnimation = new Animation(attackRightSpriteSheet, context, 64, 64, 0, 5, 3, 20);
+        // left attack
+        let LeftAttackSpriteSheet = new Image();
+        LeftAttackSpriteSheet.src = "SpriteSheets/LeftAttack.png";
+        this.attackLeftAnimation = new Animation(LeftAttackSpriteSheet, context, 64, 64, 0, 5, 3, 20);
 
         // current Animation
         this.currentAnimation = this.idleAnimation;
@@ -190,14 +196,25 @@ class Player extends Entity{
         // running to the right
         if (this.velocity[0] > 0) {
             this.currentAnimation = this.runRightAnimation;
+            this.facingRight = true;
         }
         // running left
         else if (this.velocity[0] < 0) {
             this.currentAnimation = this.runLeftAnimation;
+            this.facingRight = false;
         }
+        // attacking right
         else if (this.attacking) {
-            this.currentAnimation = this.attackAnimation;
+            this.currentAnimation = this.attackRightAnimation;
+            this.facingRight = true;
         }
+        //attacking left
+        else if (!this.facingRight&&this.attacking) {
+            this.currentAnimation = this.attackLeftAnimation;
+            this.facingRight = false;
+            console.log("attacking left");
+        }
+        // resets back to idle animation if there are no other movement inputs
         else {
             this.currentAnimation = this.idleAnimation;
         }
@@ -229,6 +246,7 @@ class Player extends Entity{
     }
 }
 
+
 class Bat extends Entity {
     constructor() {
         super();
@@ -252,6 +270,7 @@ class Bat extends Entity {
         super.draw();
     }
 }
+
 
 class Coin extends Entity {
     constructor() {
@@ -288,13 +307,15 @@ window.addEventListener("keydown", (keypressed) => {
     let upKey = "ArrowUp";
     let attackKey = "f";
 
-    // switch statement that returns the key that was pressed
+    // switch statement that sets a specific state false
     switch (keypressed.key) {
         case leftKey:
             player.movingLeft = true; // to change the x position by 5 pixels left
+            player.facingRight = false;
             break;
         case rightKey:
             player.movingRight = true; // to change the x position by 5 pixels right
+            player.facingRight = true;
             break;
         // case upKey:
         //     player.jumping = true; // to change the y position by 5 pixels upwards
@@ -310,13 +331,15 @@ window.addEventListener("keyup", (keyreleased) => {
     let rightKey = "ArrowRight";
     let attackKey = "f";
 
-    // switch statement that returns the key that was pressed
+    // switch statement that sets a specific state false
     switch (keyreleased.key) {
         case leftKey:
             player.movingLeft = false;
+            player.facingRight = false;
             break;
         case rightKey:
             player.movingRight = false;
+            player.facingRight = true;
             break;
         case attackKey:
             player.attacking = false;
